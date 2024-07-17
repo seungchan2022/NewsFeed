@@ -33,5 +33,11 @@ extension NewsPage: View {
     }
     .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
+    .onAppear {
+      store.send(.getItem)
+    }
+    .onDisappear {
+      store.send(.teardown)
+    }
   }
 }

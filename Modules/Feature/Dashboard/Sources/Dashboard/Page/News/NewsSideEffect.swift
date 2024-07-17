@@ -1,5 +1,8 @@
 import Architecture
+import Combine
+import CombineExt
 import ComposableArchitecture
+import Domain
 import Foundation
 
 // MARK: - NewsSideEffect
@@ -21,6 +24,18 @@ struct NewsSideEffect {
 }
 
 extension NewsSideEffect {
+
+  var getItem: (NewsEntity.TopHeadlines.General.Request) -> Effect<NewsReducer.Action> {
+    { req in
+      .publisher {
+        useCase.newsUseCase
+          .general(req)
+          .receive(on: main)
+          .mapToResult()
+          .map(NewsReducer.Action.fetchItem)
+      }
+    }
+  }
 
   var routeToTabBarItem: (String) -> Void {
     { path in

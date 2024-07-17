@@ -22,6 +22,9 @@ struct NewsReducer {
   struct State: Equatable, Identifiable {
     let id: UUID
 
+    var itemList: [NewsEntity.TopHeadlines.General.Item] = []
+    var fetchItem: FetchState.Data<NewsEntity.TopHeadlines.General.Response?> = .init(isLoading: false, value: .none)
+
     init(id: UUID = UUID()) {
       self.id = id
     }
@@ -31,6 +34,9 @@ struct NewsReducer {
     case binding(BindingAction<State>)
     case teardown
 
+    case getItem
+    case fetchItem(Result<NewsEntity.TopHeadlines.General.Response, CompositeErrorRepository>)
+
     case routeToTabBarItem(String)
 
     case throwError(CompositeErrorRepository)
@@ -38,11 +44,12 @@ struct NewsReducer {
 
   enum CancelID: Equatable, CaseIterable {
     case teardown
+    case requestItem
   }
 
   var body: some Reducer<State, Action> {
     BindingReducer()
-    Reduce { _, action in
+    Reduce { state, action in
       switch action {
       case .binding:
         return .none
@@ -50,6 +57,24 @@ struct NewsReducer {
       case .teardown:
         return .concatenate(
           CancelID.allCases.map { .cancel(pageID: pageID, id: $0) })
+
+      case .getItem:
+        state.fetchItem.isLoading = true
+        return sideEffect
+          .getItem(.init())
+          .cancellable(pageID: pageID, id: CancelID.requestItem, cancelInFlight: true)
+
+      case .fetchItem(let result):
+        state.fetchItem.isLoading = false
+        switch result {
+        case .success(let item):
+          state.fetchItem.value = item
+          state.itemList = state.itemList + item.itemList
+          return .none
+
+        case .failure(let error):
+          return .run { await $0(.throwError(error)) }
+        }
 
       case .routeToTabBarItem(let matchPath):
         sideEffect.routeToTabBarItem(matchPath)
