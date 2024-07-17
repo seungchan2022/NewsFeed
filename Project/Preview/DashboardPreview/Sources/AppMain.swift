@@ -13,6 +13,9 @@ struct AppMain {
 extension AppMain: View {
 
   var body: some View {
-    Text("App Main1")
+    LinkNavigationView(
+      linkNavigator: viewModel.linkNavigator,
+      item: .init(path: Link.Dashboard.Path.news.rawValue))
+      .ignoresSafeArea()
   }
 }

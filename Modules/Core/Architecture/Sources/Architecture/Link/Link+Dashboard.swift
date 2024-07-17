@@ -8,8 +8,8 @@ extension Link {
 
 // MARK: - Link.Dashboard.Path
 
-// extension Link.Dashboard {
-//  public enum Path: String, Equatable {
-//
-//  }
-// }
+extension Link.Dashboard {
+  public enum Path: String, Equatable {
+    case news
+  }
+}
