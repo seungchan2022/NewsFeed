@@ -2,9 +2,9 @@ import Architecture
 import ComposableArchitecture
 import Foundation
 
-// MARK: - NewsSideEffect
+// MARK: - SearchSideEffect
 
-struct NewsSideEffect {
+struct SearchSideEffect {
   let useCase: DashboardEnvironmentUsable
   let main: AnySchedulerOf<DispatchQueue>
   let navigator: RootNavigatorType
@@ -20,12 +20,12 @@ struct NewsSideEffect {
   }
 }
 
-extension NewsSideEffect {
-
+extension SearchSideEffect {
   var routeToTabBarItem: (String) -> Void {
     { path in
-      guard path != Link.Dashboard.Path.news.rawValue else { return }
+      guard path != Link.Dashboard.Path.search.rawValue else { return }
       navigator.replace(linkItem: .init(path: path), isAnimated: false)
     }
   }
+
 }

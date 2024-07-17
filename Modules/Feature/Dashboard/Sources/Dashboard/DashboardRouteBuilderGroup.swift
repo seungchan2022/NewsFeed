@@ -11,6 +11,8 @@ extension DashboardRouteBuilderGroup {
   public static var release: [RouteBuilderOf<RootNavigator>] {
     [
       NewsRouteBuilder.generate(),
+      SearchRouteBuilder.generate(),
+      SavedRouteBuilder.generate(),
     ]
   }
 }

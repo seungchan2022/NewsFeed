@@ -4,13 +4,13 @@ import Domain
 import Foundation
 
 @Reducer
-struct NewsReducer {
+struct SavedReducer {
 
   // MARK: Lifecycle
 
   init(
     pageID: String = UUID().uuidString,
-    sideEffect: NewsSideEffect)
+    sideEffect: SavedSideEffect)
   {
     self.pageID = pageID
     self.sideEffect = sideEffect
@@ -65,6 +65,6 @@ struct NewsReducer {
   // MARK: Private
 
   private let pageID: String
-  private let sideEffect: NewsSideEffect
+  private let sideEffect: SavedSideEffect
 
 }

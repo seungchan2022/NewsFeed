@@ -45,11 +45,15 @@ extension DesignSystemNavigation: View {
           }
           .overlay(alignment: .center) {
             if showInlineTitle, let largeTitle {
-              Text(largeTitle)
-                .font(.headline)
-                .foregroundStyle(.black)
-                .transition(.opacity)
-                .animation(.easeInOut, value: showInlineTitle)
+              VStack {
+                Text(largeTitle)
+                  .font(.headline)
+                  .foregroundStyle(.black)
+                  .transition(.opacity)
+                  .animation(.easeInOut, value: showInlineTitle)
+
+                Divider()
+              }
             }
           }
       }

@@ -28,6 +28,7 @@ extension TabNavigationComponent: View {
             Text(item.matchPath)
               .font(.footnote)
               .foregroundStyle(Color.defaultButtonColor(item.isActive))
+              .textInputAutocapitalization(.characters)
           }
         }
         if viewState.itemList.last != item {
@@ -59,17 +60,19 @@ extension TabNavigationComponent {
       self.activeMatchPath = activeMatchPath
       itemList = [
         .init(
-          matchPath: "home",
+          matchPath: "news",
+          activeMatchPath: activeMatchPath,
+          icon: Image(systemName: "newspaper.fill")),
+
+        .init(
+          matchPath: "search",
           activeMatchPath: activeMatchPath,
           icon: Image(systemName: "magnifyingglass")),
+
         .init(
-          matchPath: "wishList",
+          matchPath: "saved",
           activeMatchPath: activeMatchPath,
-          icon: Image(systemName: "heart.fill")),
-        .init(
-          matchPath: "profile",
-          activeMatchPath: activeMatchPath,
-          icon: Image(systemName: "person.circle.fill")),
+          icon: Image(systemName: "bookmark.fill")),
       ]
     }
 
@@ -114,7 +117,7 @@ extension Color {
   VStack {
     Spacer()
     TabNavigationComponent(
-      viewState: .init(activeMatchPath: "audioMemo"),
+      viewState: .init(activeMatchPath: "saved"),
       tapAction: { _ in })
   }
   //  .background(.red)

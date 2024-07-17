@@ -3,28 +3,29 @@ import ComposableArchitecture
 import DesignSystem
 import SwiftUI
 
-// MARK: - NewsPage
+// MARK: - SavedPage
 
-struct NewsPage {
-  @Bindable var store: StoreOf<NewsReducer>
+struct SavedPage {
+  @Bindable var store: StoreOf<SavedReducer>
 }
 
-extension NewsPage {
+extension SavedPage {
   private var tabNavigationComponentViewState: TabNavigationComponent.ViewState {
-    .init(activeMatchPath: Link.Dashboard.Path.news.rawValue)
+    .init(activeMatchPath: Link.Dashboard.Path.saved.rawValue)
   }
+
 }
 
 // MARK: View
 
-extension NewsPage: View {
+extension SavedPage: View {
   var body: some View {
     VStack {
       DesignSystemNavigation(
         barItem: .init(title: ""),
-        largeTitle: "Top Headlines")
+        largeTitle: "Saved")
       {
-        Text("News")
+        Text("Saved")
       }
 
       TabNavigationComponent(
