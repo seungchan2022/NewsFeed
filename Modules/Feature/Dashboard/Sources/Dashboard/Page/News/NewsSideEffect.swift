@@ -25,11 +25,11 @@ struct NewsSideEffect {
 
 extension NewsSideEffect {
 
-  var getItem: (NewsEntity.TopHeadlines.General.Request) -> Effect<NewsReducer.Action> {
+  var getItem: (NewsEntity.TopHeadlines.Request) -> Effect<NewsReducer.Action> {
     { req in
       .publisher {
         useCase.newsUseCase
-          .general(req)
+          .news(req)
           .receive(on: main)
           .mapToResult()
           .map(NewsReducer.Action.fetchItem)

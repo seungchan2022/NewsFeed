@@ -15,8 +15,8 @@ public struct NewsUseCasePlatform {
 // MARK: NewsUseCase
 
 extension NewsUseCasePlatform: NewsUseCase {
-  public var general: (NewsEntity.TopHeadlines.General.Request) -> AnyPublisher<
-    NewsEntity.TopHeadlines.General.Response,
+  public var news: (NewsEntity.TopHeadlines.Request) -> AnyPublisher<
+    NewsEntity.TopHeadlines.Response,
     CompositeErrorRepository
   > {
     {

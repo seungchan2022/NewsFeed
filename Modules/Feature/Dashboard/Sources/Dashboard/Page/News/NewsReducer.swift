@@ -3,6 +3,8 @@ import ComposableArchitecture
 import Domain
 import Foundation
 
+// MARK: - NewsReducer
+
 @Reducer
 struct NewsReducer {
 
@@ -22,8 +24,10 @@ struct NewsReducer {
   struct State: Equatable, Identifiable {
     let id: UUID
 
-    var itemList: [NewsEntity.TopHeadlines.General.Item] = []
-    var fetchItem: FetchState.Data<NewsEntity.TopHeadlines.General.Response?> = .init(isLoading: false, value: .none)
+    var category = ""
+
+    var itemList: [NewsEntity.TopHeadlines.Item] = []
+    var fetchItem: FetchState.Data<NewsEntity.TopHeadlines.Response?> = .init(isLoading: false, value: .none)
 
     init(id: UUID = UUID()) {
       self.id = id
@@ -34,8 +38,8 @@ struct NewsReducer {
     case binding(BindingAction<State>)
     case teardown
 
-    case getItem
-    case fetchItem(Result<NewsEntity.TopHeadlines.General.Response, CompositeErrorRepository>)
+    case getItem(String)
+    case fetchItem(Result<NewsEntity.TopHeadlines.Response, CompositeErrorRepository>)
 
     case routeToTabBarItem(String)
 
@@ -58,10 +62,12 @@ struct NewsReducer {
         return .concatenate(
           CancelID.allCases.map { .cancel(pageID: pageID, id: $0) })
 
-      case .getItem:
+      case .getItem(let category):
         state.fetchItem.isLoading = true
+        let page = Int(state.itemList.count / 20) + 1
+
         return sideEffect
-          .getItem(.init())
+          .getItem(.init(category: category, page: page))
           .cancellable(pageID: pageID, id: CancelID.requestItem, cancelInFlight: true)
 
       case .fetchItem(let result):
@@ -69,7 +75,7 @@ struct NewsReducer {
         switch result {
         case .success(let item):
           state.fetchItem.value = item
-          state.itemList = state.itemList + item.itemList
+          state.itemList = state.itemList.merge(item.itemList)
           return .none
 
         case .failure(let error):
@@ -92,4 +98,16 @@ struct NewsReducer {
   private let pageID: String
   private let sideEffect: NewsSideEffect
 
+}
+
+extension [NewsEntity.TopHeadlines.Item] {
+  /// 중복된게 올라옴
+  fileprivate func merge(_ target: Self) -> Self {
+    let new = target.reduce(self) { curr, next in
+      guard !self.contains(where: { $0.url == next.url }) else { return curr }
+      return curr + [next]
+    }
+
+    return new
+  }
 }

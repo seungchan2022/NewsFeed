@@ -25,10 +25,9 @@ extension TabNavigationComponent: View {
               .frame(width: 32, height: 32)
               .foregroundStyle(Color.defaultButtonColor(item.isActive))
 
-            Text(item.matchPath)
+            Text(item.matchPath.capitalized)
               .font(.footnote)
               .foregroundStyle(Color.defaultButtonColor(item.isActive))
-              .textInputAutocapitalization(.characters)
           }
         }
         if viewState.itemList.last != item {

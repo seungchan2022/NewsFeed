@@ -10,8 +10,13 @@ struct NewsPage {
 }
 
 extension NewsPage {
+
   private var tabNavigationComponentViewState: TabNavigationComponent.ViewState {
     .init(activeMatchPath: Link.Dashboard.Path.news.rawValue)
+  }
+
+  private var isLoading: Bool {
+    store.fetchItem.isLoading
   }
 }
 
@@ -24,7 +29,20 @@ extension NewsPage: View {
         barItem: .init(title: ""),
         largeTitle: "Top Headlines")
       {
-        Text("News")
+        CategoryComponent(
+          viewState: .init(),
+          store: store)
+
+        LazyVStack(spacing: 32) {
+          ForEach(store.itemList, id: \.url) { item in
+            ItemComponent(viewState: .init(item: item))
+              .onAppear {
+                guard let last = store.itemList.last, last.url == item.url else { return }
+                guard !store.fetchItem.isLoading else { return }
+                store.send(.getItem(store.category))
+              }
+          }
+        }
       }
 
       TabNavigationComponent(
@@ -33,8 +51,13 @@ extension NewsPage: View {
     }
     .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
+    .onChange(of: store.category) { _, new in
+      store.itemList = []
+      store.send(.getItem(new))
+    }
+    .setRequestFlightView(isLoading: isLoading)
     .onAppear {
-      store.send(.getItem)
+      store.send(.getItem(store.category))
     }
     .onDisappear {
       store.send(.teardown)

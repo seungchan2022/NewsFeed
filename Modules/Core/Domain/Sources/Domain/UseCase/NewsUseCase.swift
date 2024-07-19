@@ -1,8 +1,8 @@
 import Combine
 
 public protocol NewsUseCase {
-  var general: (NewsEntity.TopHeadlines.General.Request) -> AnyPublisher<
-    NewsEntity.TopHeadlines.General.Response,
+  var news: (NewsEntity.TopHeadlines.Request) -> AnyPublisher<
+    NewsEntity.TopHeadlines.Response,
     CompositeErrorRepository
   > { get }
 }
