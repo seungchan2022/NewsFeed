@@ -1,12 +1,16 @@
 import Architecture
 import ComposableArchitecture
 import DesignSystem
+import Functor
 import SwiftUI
 
 // MARK: - SearchPage
 
 struct SearchPage {
   @Bindable var store: StoreOf<SearchReducer>
+
+  @State var throttleEvent: ThrottleEvent = .init(value: "", delaySeconds: 1.5)
+
 }
 
 extension SearchPage {
@@ -14,6 +18,9 @@ extension SearchPage {
     .init(activeMatchPath: Link.Dashboard.Path.search.rawValue)
   }
 
+  private var isLoading: Bool {
+    store.fetchSearchItem.isLoading
+  }
 }
 
 // MARK: View
@@ -25,7 +32,20 @@ extension SearchPage: View {
         barItem: .init(title: ""),
         largeTitle: "Search")
       {
-        Text("Search")
+        SearchBar(
+          viewState: .init(text: $store.query),
+          throttleAction: { })
+
+        LazyVStack {
+          ForEach(store.itemList, id: \.url) { item in
+            ItemComponent(viewState: .init(item: item))
+              .onAppear {
+                guard let last = store.itemList.last, last.url == item.url else { return }
+                guard !store.fetchSearchItem.isLoading else { return }
+                store.send(.search(store.query))
+              }
+          }
+        }
       }
 
       TabNavigationComponent(
@@ -34,5 +54,18 @@ extension SearchPage: View {
     }
     .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
+    .onChange(of: store.query) { _, new in
+      throttleEvent.update(value: new)
+    }
+    .setRequestFlightView(isLoading: isLoading)
+    .onAppear {
+      throttleEvent.apply { _ in
+        store.send(.search(store.query))
+      }
+    }
+    .onDisappear {
+      throttleEvent.reset()
+      store.send(.teardown)
+    }
   }
 }
