@@ -25,6 +25,8 @@ struct NewsReducer {
     let id: UUID
 
     var category = ""
+    var selectedURL = ""
+    var isShowSafariView = false
 
     var itemList: [NewsEntity.TopHeadlines.Item] = []
     var fetchItem: FetchState.Data<NewsEntity.TopHeadlines.Response?> = .init(isLoading: false, value: .none)
@@ -40,6 +42,8 @@ struct NewsReducer {
 
     case getItem(String)
     case fetchItem(Result<NewsEntity.TopHeadlines.Response, CompositeErrorRepository>)
+
+    case selectedURL(String)
 
     case routeToTabBarItem(String)
 
@@ -81,6 +85,10 @@ struct NewsReducer {
         case .failure(let error):
           return .run { await $0(.throwError(error)) }
         }
+
+      case .selectedURL(let url):
+        state.selectedURL = url
+        return .none
 
       case .routeToTabBarItem(let matchPath):
         sideEffect.routeToTabBarItem(matchPath)

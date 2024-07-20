@@ -11,6 +11,7 @@ extension Link {
 extension Link.Dashboard {
   public enum Path: String, Equatable {
     case news
+    case newsDetail
     case search
     case saved
   }

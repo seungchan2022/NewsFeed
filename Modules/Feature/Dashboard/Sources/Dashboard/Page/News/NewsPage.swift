@@ -18,6 +18,12 @@ extension NewsPage {
   private var isLoading: Bool {
     store.fetchItem.isLoading
   }
+
+  private var navigationTitle: String {
+    store.category.isEmpty
+      ? "Top Headlines"
+      : store.category.capitalized
+  }
 }
 
 // MARK: View
@@ -27,7 +33,7 @@ extension NewsPage: View {
     VStack {
       DesignSystemNavigation(
         barItem: .init(title: ""),
-        largeTitle: "Top Headlines")
+        largeTitle: navigationTitle)
       {
         CategoryComponent(
           viewState: .init(),
@@ -35,7 +41,12 @@ extension NewsPage: View {
 
         LazyVStack(spacing: 32) {
           ForEach(store.itemList, id: \.url) { item in
-            ItemComponent(viewState: .init(item: item))
+            ItemComponent(
+              viewState: .init(item: item),
+              tapAction: {
+                store.isShowSafariView = true
+                store.send(.selectedURL($0.url))
+              })
               .onAppear {
                 guard let last = store.itemList.last, last.url == item.url else { return }
                 guard !store.fetchItem.isLoading else { return }
@@ -61,6 +72,12 @@ extension NewsPage: View {
     }
     .onDisappear {
       store.send(.teardown)
+    }
+    .fullScreenCover(isPresented: $store.isShowSafariView) {
+      if let url = URL(string: store.selectedURL) {
+        SafariView(viewState: .init(url: url))
+          .ignoresSafeArea()
+      }
     }
   }
 }

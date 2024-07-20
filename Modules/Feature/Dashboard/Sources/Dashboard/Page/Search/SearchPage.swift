@@ -38,7 +38,12 @@ extension SearchPage: View {
 
         LazyVStack {
           ForEach(store.itemList, id: \.url) { item in
-            ItemComponent(viewState: .init(item: item))
+            ItemComponent(
+              viewState: .init(item: item),
+              tapAction: {
+                store.isShowSafariView = true
+                store.send(.selectedURL($0.url))
+              })
               .onAppear {
                 guard let last = store.itemList.last, last.url == item.url else { return }
                 guard !store.fetchSearchItem.isLoading else { return }
@@ -66,6 +71,12 @@ extension SearchPage: View {
     .onDisappear {
       throttleEvent.reset()
       store.send(.teardown)
+    }
+    .fullScreenCover(isPresented: $store.isShowSafariView) {
+      if let url = URL(string: store.selectedURL) {
+        SafariView(viewState: .init(url: url))
+          .ignoresSafeArea()
+      }
     }
   }
 }

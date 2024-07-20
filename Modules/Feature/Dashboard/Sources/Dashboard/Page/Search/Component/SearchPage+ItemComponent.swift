@@ -7,6 +7,7 @@ import SwiftUI
 extension SearchPage {
   struct ItemComponent {
     let viewState: ViewState
+    let tapAction: (NewsEntity.Search.Item) -> Void
   }
 }
 
@@ -65,6 +66,9 @@ extension SearchPage.ItemComponent: View {
       .padding(.horizontal, 8)
     }
     .frame(maxWidth: .infinity)
+    .onTapGesture {
+      tapAction(viewState.item)
+    }
   }
 }
 

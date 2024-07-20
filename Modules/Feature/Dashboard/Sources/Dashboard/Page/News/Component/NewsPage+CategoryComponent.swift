@@ -31,18 +31,16 @@ extension NewsPage.CategoryComponent: View {
           Button(action: {
             store.category = item
           }) {
-            if item == "" {
-              Text("Top Headlines")
-            }
-
-            Text(item.capitalized)
+            item.isEmpty
+              ? Text("Top Headlines")
+              : Text(item.capitalized)
           }
           .buttonStyle(.bordered)
           .buttonBorderShape(.capsule)
           .controlSize(.small)
         }
       }
-      .padding(.leading, 12)
+      .padding(.horizontal, 12)
     }
     .scrollIndicators(.hidden)
   }

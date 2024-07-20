@@ -7,6 +7,7 @@ import SwiftUI
 extension NewsPage {
   struct ItemComponent {
     let viewState: ViewState
+    let tapAction: (NewsEntity.TopHeadlines.Item) -> Void
   }
 }
 
@@ -65,6 +66,9 @@ extension NewsPage.ItemComponent: View {
       .padding(.horizontal, 8)
     }
     .frame(maxWidth: .infinity)
+    .onTapGesture {
+      tapAction(viewState.item)
+    }
   }
 }
 

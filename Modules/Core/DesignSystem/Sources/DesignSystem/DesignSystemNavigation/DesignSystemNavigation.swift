@@ -76,7 +76,7 @@ extension DesignSystemNavigation: View {
             .multilineTextAlignment(.leading)
             .padding(.horizontal, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, titleTopMargin)
+//            .padding(.top, titleTopMargin)
         }
         content
           .padding(.top, 8)

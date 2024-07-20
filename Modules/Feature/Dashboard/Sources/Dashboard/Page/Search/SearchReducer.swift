@@ -26,6 +26,9 @@ struct SearchReducer {
 
     var query = ""
     var perPage = 20
+    var selectedURL = ""
+    var isShowSafariView = false
+
     var itemList: [NewsEntity.Search.Item] = []
     var fetchSearchItem: FetchState.Data<NewsEntity.Search.Composite?> = .init(isLoading: false, value: .none)
 
@@ -40,6 +43,8 @@ struct SearchReducer {
 
     case search(String)
     case fetchSearchItem(Result<NewsEntity.Search.Composite, CompositeErrorRepository>)
+
+    case selectedURL(String)
 
     case routeToTabBarItem(String)
 
@@ -93,6 +98,10 @@ struct SearchReducer {
         case .failure(let error):
           return .run { await $0(.throwError(error)) }
         }
+
+      case .selectedURL(let url):
+        state.selectedURL = url
+        return .none
 
       case .routeToTabBarItem(let matchPath):
         sideEffect.routeToTabBarItem(matchPath)
