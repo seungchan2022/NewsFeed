@@ -28,6 +28,7 @@ struct SearchReducer {
     var perPage = 20
     var selectedURL = ""
     var isShowSafariView = false
+    var fromDate = Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? Date()
 
     var itemList: [NewsEntity.Search.Item] = []
     var fetchSearchItem: FetchState.Data<NewsEntity.Search.Composite?> = .init(isLoading: false, value: .none)
@@ -66,6 +67,10 @@ struct SearchReducer {
           return .cancel(pageID: pageID, id: CancelID.requestSearch)
         }
 
+        if state.query != state.fetchSearchItem.value?.request.query {
+          state.itemList = []
+        }
+
         return .none
 
       case .binding:
@@ -83,15 +88,17 @@ struct SearchReducer {
         state.fetchSearchItem.isLoading = true
         let page = Int(state.itemList.count / state.perPage) + 1
         return sideEffect
-          .search(.init(query: query, from: "2024-07-18", page: page, perPage: state.perPage))
+          .search(.init(query: query, from: state.fromDate.toString, page: page, perPage: state.perPage))
           .cancellable(pageID: pageID, id: CancelID.requestSearch, cancelInFlight: true)
 
       case .fetchSearchItem(let result):
         state.fetchSearchItem.isLoading = false
         switch result {
         case .success(let item):
-          state.fetchSearchItem.value = item
-          state.itemList = state.itemList.merge(item.response.itemList)
+          if state.query == item.request.query {
+            state.fetchSearchItem.value = item
+            state.itemList = state.itemList.merge(item.response.itemList)
+        }
 
           return .none
 
@@ -129,5 +136,13 @@ extension [NewsEntity.Search.Item] {
     }
 
     return new
+  }
+}
+
+extension Date {
+  fileprivate var toString: String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    return dateFormatter.string(from: self)
   }
 }

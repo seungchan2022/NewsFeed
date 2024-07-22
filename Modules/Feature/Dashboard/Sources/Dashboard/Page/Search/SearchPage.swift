@@ -57,6 +57,7 @@ extension SearchPage: View {
         viewState: tabNavigationComponentViewState,
         tapAction: { store.send(.routeToTabBarItem($0)) })
     }
+    .scrollDismissesKeyboard(.immediately)
     .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
     .onChange(of: store.query) { _, new in
@@ -72,7 +73,7 @@ extension SearchPage: View {
       throttleEvent.reset()
       store.send(.teardown)
     }
-    .fullScreenCover(isPresented: $store.isShowSafariView) {
+    .sheet(isPresented: $store.isShowSafariView) {
       if let url = URL(string: store.selectedURL) {
         SafariView(viewState: .init(url: url))
           .ignoresSafeArea()
