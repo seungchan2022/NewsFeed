@@ -3,6 +3,18 @@ import ComposableArchitecture
 import Domain
 import Foundation
 
+// MARK: - CategoryList
+
+enum CategoryList: String, Equatable, CaseIterable {
+  case general
+  case business
+  case entertainment
+  case health
+  case science
+  case sports
+  case technology
+}
+
 // MARK: - NewsReducer
 
 @Reducer
@@ -24,7 +36,7 @@ struct NewsReducer {
   struct State: Equatable, Identifiable {
     let id: UUID
 
-    var category = ""
+    var category = CategoryList.general.rawValue
     var selectedURL = ""
     var isShowSafariView = false
 

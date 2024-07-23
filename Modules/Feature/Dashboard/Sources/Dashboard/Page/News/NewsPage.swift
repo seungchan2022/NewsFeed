@@ -20,7 +20,7 @@ extension NewsPage {
   }
 
   private var navigationTitle: String {
-    store.category.isEmpty
+    store.category == "general"
       ? "Top Headlines"
       : store.category.capitalized
   }

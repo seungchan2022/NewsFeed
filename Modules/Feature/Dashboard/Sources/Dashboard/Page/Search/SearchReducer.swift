@@ -98,7 +98,7 @@ struct SearchReducer {
           if state.query == item.request.query {
             state.fetchSearchItem.value = item
             state.itemList = state.itemList.merge(item.response.itemList)
-        }
+          }
 
           return .none
 
