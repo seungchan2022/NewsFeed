@@ -51,11 +51,6 @@ extension NewsPage.ItemComponent: View {
 
           Spacer()
 
-          Button(action: { }) {
-            Image(systemName: "bookmark")
-          }
-          .buttonStyle(.bordered)
-
           ShareLink(item: viewState.item.url) {
             Image(systemName: "square.and.arrow.up")
           }

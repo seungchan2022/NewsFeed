@@ -67,11 +67,6 @@ extension TabNavigationComponent {
           matchPath: "search",
           activeMatchPath: activeMatchPath,
           icon: Image(systemName: "magnifyingglass")),
-
-        .init(
-          matchPath: "saved",
-          activeMatchPath: activeMatchPath,
-          icon: Image(systemName: "bookmark.fill")),
       ]
     }
 

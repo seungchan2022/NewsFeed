@@ -25,10 +25,10 @@ extension AppMain: View {
           tag: 1,
           tabItem: .init(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1),
           linkItem: .init(path: Link.Dashboard.Path.search.rawValue)),
-        .init(
-          tag: 2,
-          tabItem: .init(title: "Saved", image: UIImage(systemName: "bookmark.fill"), tag: 2),
-          linkItem: .init(path: Link.Dashboard.Path.saved.rawValue)),
+//        .init(
+//          tag: 2,
+//          tabItem: .init(title: "Saved", image: UIImage(systemName: "bookmark.fill"), tag: 2),
+//          linkItem: .init(path: Link.Dashboard.Path.saved.rawValue)),
       ])
       .ignoresSafeArea()
       .onAppear()

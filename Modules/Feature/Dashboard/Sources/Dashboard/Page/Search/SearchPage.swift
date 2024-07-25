@@ -36,6 +36,19 @@ extension SearchPage: View {
           viewState: .init(text: $store.query),
           throttleAction: { })
 
+        if store.itemList.isEmpty {
+          VStack {
+            Image(systemName: "magnifyingglass")
+              .resizable()
+              .fontWeight(.light)
+              .frame(width: 150, height: 150)
+
+            Text("Search for the information you want to find.")
+              .font(.body)
+          }
+          .padding(.top, 120)
+        }
+
         LazyVStack {
           ForEach(store.itemList, id: \.url) { item in
             ItemComponent(
