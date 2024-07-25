@@ -28,11 +28,7 @@ extension SavedPage: View {
         Text("Saved")
       }
 
-      TabNavigationComponent(
-        viewState: tabNavigationComponentViewState,
-        tapAction: { store.send(.routeToTabBarItem($0)) })
     }
-    .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
   }
 }

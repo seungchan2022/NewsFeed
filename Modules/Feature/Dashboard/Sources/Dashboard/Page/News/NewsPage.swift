@@ -55,12 +55,7 @@ extension NewsPage: View {
           }
         }
       }
-
-      TabNavigationComponent(
-        viewState: tabNavigationComponentViewState,
-        tapAction: { store.send(.routeToTabBarItem($0)) })
     }
-    .ignoresSafeArea(.all, edges: .bottom)
     .toolbar(.hidden, for: .navigationBar)
     .onChange(of: store.category) { _, new in
       store.itemList = []
